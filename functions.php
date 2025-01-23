@@ -85,11 +85,22 @@ function edit_cerita($id_cerita, $foto, $judul_cerita, $deskripsi_cerita, $creat
             echo "Terjadi kesalahan saat mengupload gambar.";
             return false;
         }
+    } else {
+        $foto = $db->escapeString($foto);
     }
+
+    $judul_cerita = $db->escapeString($judul_cerita);
+    $deskripsi_cerita = $db->escapeString($deskripsi_cerita);
+    $created_at = $db->escapeString($created_at);
 
     $query = "UPDATE ceritaku SET foto = '$foto', judul_cerita = '$judul_cerita', deskripsi_cerita = '$deskripsi_cerita', created_at = '$created_at' WHERE id_cerita = $id_cerita";
     $result = $db->query($query);
-    return $result;
+    if ($result) {
+        header("Location: index.php?status=success&message=Cerita berhasil diperbarui");
+    } else {
+        header("Location: edit_cerita.php?status=error&message=Gagal memperbarui cerita");
+    }
+    exit();
 }
 
 function hapus_cerita($id_cerita)
